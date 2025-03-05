@@ -1,9 +1,7 @@
 # FPSickle
 
 A tool for analyzing raw video game recordings from OBS and estimating their real framerate. The tool generates a framerate graph overlay on top of the video.
-
-https://github.com/user-attachments/assets/2b946b7b-2f7c-4131-8890-c5af589fd768
-
+https://github.com/user-attachments/assets/ad669a01-b4ed-4636-92bf-f7e3a9813c00
 ## Features
 
 - Analyzes raw AVI recordings from OBS
