@@ -1,17 +1,17 @@
 #!/usr/bin/env python3
 """
-Sample usage of the FPS Analyser
+Sample usage of FPSickle
 """
 
 import os
 import sys
-from fps_analyser import FPSAnalyser
+from fpsickle import FPSickle
 
 def main():
     """
-    Sample usage of the FPS Analyser
+    Sample usage of FPSickle
 
-    This script demonstrates how to use the FPS Analyser class programmatically,
+    This script demonstrates how to use FPSickle class programmatically,
     without using the command-line interface.
     """
     # Check if input file is provided
@@ -28,8 +28,8 @@ def main():
     print(f"Output will be saved to: {output_file}")
 
     try:
-        # Create an instance of the FPS Analyser
-        analyzer = FPSAnalyser(
+        # Create an instance of FPSickle
+        analyzer = FPSickle(
             input_file=input_file,
             output_file=output_file,
             window_size=30,  # Analyze FPS every 30 frames

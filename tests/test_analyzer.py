@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Tests for the FPS Analyser
+Tests for FPSickle
 """
 
 import sys
@@ -11,7 +11,7 @@ import numpy as np
 # Add the src directory to the path so we can import our module
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
-from src.fps_analyser import FPSAnalyser
+from src.fpsickle import FPSickle
 
 
 class TestFrameDifference(unittest.TestCase):
@@ -23,7 +23,7 @@ class TestFrameDifference(unittest.TestCase):
         frame = np.zeros((100, 100, 3), dtype=np.uint8)
 
         # Create an instance of the analyzer with dummy values
-        analyzer = FPSAnalyser.__new__(FPSAnalyser)
+        analyzer = FPSickle.__new__(FPSickle)
 
         # Test difference of identical frames should be 0
         diff = analyzer.calculate_frame_difference(frame, frame)
@@ -36,7 +36,7 @@ class TestFrameDifference(unittest.TestCase):
         frame2 = np.ones((100, 100, 3), dtype=np.uint8) * 255
 
         # Create an instance of the analyzer with dummy values
-        analyzer = FPSAnalyser.__new__(FPSAnalyser)
+        analyzer = FPSickle.__new__(FPSickle)
 
         # Test difference of completely different frames should be 1.0
         diff = analyzer.calculate_frame_difference(frame1, frame2)

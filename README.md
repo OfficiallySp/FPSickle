@@ -1,4 +1,4 @@
-# FPS Analyser
+# FPSickle
 
 A tool for analyzing raw video game recordings from OBS and estimating their real framerate. The tool generates a framerate graph overlay on top of the video.
 
@@ -24,10 +24,10 @@ A tool for analyzing raw video game recordings from OBS and estimating their rea
 
 ## Example Usage
 
-To run the FPS Analyser on a sample AVI file:
+To run FPSickle on a sample AVI file:
 
 ```bash
-python src/fps_analyser.py -i path/to/your/recording.avi -o analyzed_output.mp4
+python src/fpsickle.py -i path/to/your/recording.avi -o analyzed_output.mp4
 ```
 
 ## Getting Test Files
@@ -40,7 +40,6 @@ Since OBS recordings can be large, you'll need to create your own test files. He
    - In Settings → Output, set the Recording Quality to "Lossless Quality, Tremendously Large File Size"
    - Make sure "Simple" Output Mode is selected
 3. Record a short gameplay clip (30 seconds is usually enough for testing)
-4. Save the recording to the `data` directory of this project
 
 ## Expected Results
 
@@ -50,33 +49,14 @@ After analyzing a video, you'll get:
 - Console output with the average, minimum, and maximum FPS values
 - A real-time display of the video during analysis (unless `--no-display` is used)
 
-## Fine-tuning Analysis
-
-The FPS Analyser can be tuned using these parameters:
-
-- `-w` / `--window`: Analysis window size in frames (default: 30)
-  Smaller values give more frequent updates but may be less accurate
-
-- `-t` / `--threshold`: Frame difference threshold (default: 0.001)
-  Lower values are more sensitive to small changes between frames
-
-Example with custom parameters:
-
-```bash
-python src/fps_analyser.py -i recording.avi -o output.mp4 -w 15 -t 0.0005
-```
-
-```
-python src/fps_analyser.py --input path/to/your/video.avi --output output.mp4
-```
-
 ### Options:
+FPSickle can be tuned using these parameters:
 
 - `--input` / `-i`: Path to input AVI file
 - `--output` / `-o`: Path to output video file
-- `--window` / `-w`: Analysis window size in frames (default: 30)
+- `--window` / `-w`: Analysis window size in frames (default: 30)  Smaller values give more frequent updates but may be less accurate
 - `--no-display`: Don't display video during processing
-- `--threshold` / `-t`: Frame difference threshold (default: 0.001)
+- `--threshold` / `-t`: Frame difference threshold (default: 0.001) Lower values are more sensitive to small changes between frames
 - `--codec` / `-c`: FourCC codec for output video (default: mp4v)
 
 ## Troubleshooting
@@ -86,7 +66,7 @@ python src/fps_analyser.py --input path/to/your/video.avi --output output.mp4
 If you encounter problems with the output video, try specifying a different codec with the `-c` flag:
 
 ```
-python src/fps_analyser.py -i input.avi -o output.mp4 -c avc1
+python src/fpsickle.py -i input.avi -o output.mp4 -c avc1
 ```
 
 Common codec options:
@@ -112,7 +92,7 @@ If the analyzer is running too slowly:
 
 ## How It Works
 
-The FPS Analyser works by comparing consecutive frames to detect when a new frame is actually displayed.
+FPSickle works by comparing consecutive frames to detect when a new frame is actually displayed.
 In many game recordings, the actual framerate differs from the recording framerate due to:
 
 1. Variable refresh rate of the game

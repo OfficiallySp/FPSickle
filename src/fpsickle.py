@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-FPS Analyser - Analyzes raw video game recordings and estimates real framerate
+FPSickle - Analyzes raw video game recordings and estimates real framerate
 """
 
 import os
@@ -14,11 +14,11 @@ from tqdm import tqdm
 from PIL import Image
 
 
-class FPSAnalyser:
+class FPSickle:
     def __init__(self, input_file, output_file=None, window_size=30,
                  display=True, threshold=0.001, codec='mp4v'):
         """
-        Initialize the FPS Analyser
+        Initialize FPSickle
 
         Args:
             input_file (str): Path to input AVI video file
@@ -336,7 +336,7 @@ class FPSAnalyser:
 
 def main():
     """
-    Main entry point for the FPS Analyzer
+    Main entry point for FPSickle
     """
     parser = argparse.ArgumentParser(description='Analyze the real framerate of a video')
     parser.add_argument('-i', '--input', required=True, help='Input video file (AVI format)')
@@ -354,7 +354,7 @@ def main():
 
     try:
         # Create and run the analyzer
-        analyzer = FPSAnalyser(
+        analyzer = FPSickle(
             input_file=args.input,
             output_file=args.output,
             window_size=args.window,
