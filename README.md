@@ -2,6 +2,8 @@
 
 A tool for analyzing raw video game recordings from OBS and estimating their real framerate. The tool generates a framerate graph overlay on top of the video.
 
+https://github.com/user-attachments/assets/2b946b7b-2f7c-4131-8890-c5af589fd768
+
 ## Features
 
 - Analyzes raw AVI recordings from OBS
