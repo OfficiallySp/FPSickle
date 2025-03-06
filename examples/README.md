@@ -26,6 +26,7 @@ Since OBS recordings can be large, you'll need to create your own test files. He
 ## Expected Results
 
 After analyzing a video, you'll get:
+
 - A video file with the FPS graph overlay
 - Console output with the average, minimum, and maximum FPS values
 - A real-time display of the video during analysis (unless `--no-display` is used)

@@ -7,6 +7,7 @@ import os
 import sys
 from fpsickle import FPSickle, MultiVideoFPSAnalyzer
 
+
 def main():
     """
     Sample usage of FPSickle
@@ -16,7 +17,9 @@ def main():
     """
     # Check if input files are provided
     if len(sys.argv) < 2:
-        print("Usage: python sample_usage.py <path_to_video_file> [path_to_video_file2 ...]")
+        print(
+            "Usage: python sample_usage.py <path_to_video_file> [path_to_video_file2 ...]"
+        )
         return 1
 
     input_files = sys.argv[1:]
@@ -35,9 +38,9 @@ def main():
             # Create an instance of MultiVideoFPSAnalyzer
             analyzer = MultiVideoFPSAnalyzer(
                 output_file=output_file,
-                window_size=30,      # Analyze FPS every 30 frames
-                display=True,        # Display video during processing
-                threshold=0.001      # Sensitivity for detecting frame changes
+                window_size=30,  # Analyze FPS every 30 frames
+                display=True,  # Display video during processing
+                threshold=0.001,  # Sensitivity for detecting frame changes
             )
 
             # Add each video with a custom label
@@ -57,8 +60,8 @@ def main():
                 input_file=input_files[0],
                 output_file=output_file,
                 window_size=30,  # Analyze FPS every 30 frames
-                display=True,    # Display video during processing
-                threshold=0.001  # Sensitivity for detecting frame changes
+                display=True,  # Display video during processing
+                threshold=0.001,  # Sensitivity for detecting frame changes
             )
 
             # Run the analysis
@@ -69,6 +72,7 @@ def main():
         return 1
 
     return 0
+
 
 if __name__ == "__main__":
     exit(main())

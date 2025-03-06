@@ -15,8 +15,16 @@ from PIL import Image
 
 
 class FPSickle:
-    def __init__(self, input_file, output_file=None, window_size=30,
-                 display=True, threshold=0.001, codec='mp4v', label=None):
+    def __init__(
+        self,
+        input_file,
+        output_file=None,
+        window_size=30,
+        display=True,
+        threshold=0.001,
+        codec="mp4v",
+        label=None,
+    ):
         """
         Initialize FPSickle
 
@@ -93,7 +101,9 @@ class FPSickle:
         diff = cv2.absdiff(gray1, gray2)
         return np.mean(diff) / 255.0
 
-    def generate_fps_graph(self, width=800, height=200, background_color=(0, 0, 0, 180)):
+    def generate_fps_graph(
+        self, width=800, height=200, background_color=(0, 0, 0, 180)
+    ):
         """
         Generate a matplotlib graph of the FPS values
 
@@ -107,13 +117,19 @@ class FPSickle:
         """
         # Create a figure with a specific size
         dpi = 100
-        fig = Figure(figsize=(width/dpi, height/dpi), dpi=dpi)
-        fig.patch.set_facecolor('none')  # Transparent background
+        fig = Figure(figsize=(width / dpi, height / dpi), dpi=dpi)
+        fig.patch.set_facecolor("none")  # Transparent background
 
         # Add a subplot
         ax = fig.add_subplot(111)
-        ax.patch.set_alpha(background_color[3]/255)
-        ax.patch.set_facecolor((background_color[0]/255, background_color[1]/255, background_color[2]/255))
+        ax.patch.set_alpha(background_color[3] / 255)
+        ax.patch.set_facecolor(
+            (
+                background_color[0] / 255,
+                background_color[1] / 255,
+                background_color[2] / 255,
+            )
+        )
 
         # Plot data
         x = np.array(self.frame_times)
@@ -122,17 +138,19 @@ class FPSickle:
         # Add moving average line for smoother graph
         window = min(len(y), 10)
         if window > 0:
-            y_smooth = np.convolve(y, np.ones(window)/window, mode='valid')
-            x_smooth = x[window-1:]
-            ax.plot(x_smooth, y_smooth, 'g-', linewidth=2)
+            y_smooth = np.convolve(y, np.ones(window) / window, mode="valid")
+            x_smooth = x[window - 1 :]
+            ax.plot(x_smooth, y_smooth, "g-", linewidth=2)
 
         # Plot the actual data points
-        ax.plot(x, y, 'b.', alpha=0.3, markersize=3)
+        ax.plot(x, y, "b.", alpha=0.3, markersize=3)
 
         # Set labels and title
-        ax.set_xlabel('Time (s)', color='white')
-        ax.set_ylabel('FPS', color='white')
-        ax.set_title(f'Real-time FPS Analysis (Avg: {np.mean(y):.1f} FPS)', color='white')
+        ax.set_xlabel("Time (s)", color="white")
+        ax.set_ylabel("FPS", color="white")
+        ax.set_title(
+            f"Real-time FPS Analysis (Avg: {np.mean(y):.1f} FPS)", color="white"
+        )
 
         # Add grid and set limits
         ax.grid(True, alpha=0.3)
@@ -140,9 +158,9 @@ class FPSickle:
             ax.set_ylim([max(0, min(y) - 10), max(y) + 10])
 
         # Set tick colors
-        ax.tick_params(colors='white')
+        ax.tick_params(colors="white")
         for spine in ax.spines.values():
-            spine.set_color('white')
+            spine.set_color("white")
 
         # Render the figure to a numpy array
         canvas = FigureCanvasAgg(fig)
@@ -181,25 +199,33 @@ class FPSickle:
             h, w = graph.shape[:2]
 
         # Create a region of interest
-        roi = frame[y:y+h, x:x+w].copy()
+        roi = frame[y : y + h, x : x + w].copy()
 
         # Create a properly normalized alpha channel
         alpha_channel = graph[:, :, 3] / 255.0
 
         # Apply alpha blending manually for each channel
         for c in range(3):  # for each color channel (BGR)
-            roi[:, :, c] = roi[:, :, c] * (1 - alpha_channel) + graph[:, :, c] * alpha_channel
+            roi[:, :, c] = (
+                roi[:, :, c] * (1 - alpha_channel) + graph[:, :, c] * alpha_channel
+            )
 
         # Put the blended image back into the frame
         result = frame.copy()
-        result[y:y+h, x:x+w] = roi
+        result[y : y + h, x : x + w] = roi
 
         # Add current FPS value text
         if len(self.real_fps_values) > 0:
             current_fps = self.real_fps_values[-1]
-            cv2.putText(result, f"FPS: {current_fps:.1f}",
-                      (x + w + 10, y + 30),
-                      cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+            cv2.putText(
+                result,
+                f"FPS: {current_fps:.1f}",
+                (x + w + 10, y + 30),
+                cv2.FONT_HERSHEY_SIMPLEX,
+                1,
+                (0, 255, 0),
+                2,
+            )
 
         return result
 
@@ -214,17 +240,29 @@ class FPSickle:
         if self.output_file:
             try:
                 fourcc = cv2.VideoWriter_fourcc(*self.codec)
-                out = cv2.VideoWriter(self.output_file, fourcc, self.recorded_fps,
-                                     (self.width, self.height))
+                out = cv2.VideoWriter(
+                    self.output_file,
+                    fourcc,
+                    self.recorded_fps,
+                    (self.width, self.height),
+                )
                 if not out.isOpened():
-                    print(f"Warning: Could not create output video with codec '{self.codec}'.")
+                    print(
+                        f"Warning: Could not create output video with codec '{self.codec}'."
+                    )
                     print("Trying with default codec...")
                     # Try with default codec
-                    fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-                    out = cv2.VideoWriter(self.output_file, fourcc, self.recorded_fps,
-                                         (self.width, self.height))
+                    fourcc = cv2.VideoWriter_fourcc(*"mp4v")
+                    out = cv2.VideoWriter(
+                        self.output_file,
+                        fourcc,
+                        self.recorded_fps,
+                        (self.width, self.height),
+                    )
                     if not out.isOpened():
-                        print("Failed to create output video. Analysis will proceed without saving output.")
+                        print(
+                            "Failed to create output video. Analysis will proceed without saving output."
+                        )
                         out = None
             except Exception as e:
                 print(f"Error creating output video: {e}")
@@ -242,7 +280,7 @@ class FPSickle:
 
         # Keep track of unique frames in the current window
         unique_frame_count = 1  # Start with 1 to count the first frame
-        frames_in_window = 1    # Start with 1 to count the first frame
+        frames_in_window = 1  # Start with 1 to count the first frame
         self.current_frame = 1  # Start with 1 since we've read the first frame
 
         # Process each frame
@@ -284,7 +322,9 @@ class FPSickle:
             try:
                 # Generate and overlay the FPS graph
                 if len(self.real_fps_values) > 0:
-                    graph = self.generate_fps_graph(width=self.width // 3, height=self.height // 4)
+                    graph = self.generate_fps_graph(
+                        width=self.width // 3, height=self.height // 4
+                    )
                     frame_with_graph = self.overlay_graph_on_frame(frame, graph)
                 else:
                     frame_with_graph = frame
@@ -296,13 +336,13 @@ class FPSickle:
                 # Display the frame
                 if self.display:
                     cv2.imshow(window_title, frame_with_graph)
-                    if cv2.waitKey(1) & 0xFF == ord('q'):
+                    if cv2.waitKey(1) & 0xFF == ord("q"):
                         break
             except Exception as e:
                 print(f"Error processing frame {self.current_frame}: {e}")
                 if self.display:
                     cv2.imshow(window_title, frame)
-                    if cv2.waitKey(1) & 0xFF == ord('q'):
+                    if cv2.waitKey(1) & 0xFF == ord("q"):
                         break
                 if out:
                     out.write(frame)
@@ -333,15 +373,25 @@ class FPSickle:
             if self.output_file:
                 print(f"Output video saved to: {self.output_file}")
         else:
-            print("No FPS data was collected. Try adjusting the threshold or window size.")
+            print(
+                "No FPS data was collected. Try adjusting the threshold or window size."
+            )
 
 
 class MultiVideoFPSAnalyzer:
     """
     Handles multiple video FPS analysis and compositing
     """
-    def __init__(self, output_file=None, window_size=30, display=True,
-                 threshold=0.001, codec='mp4v', grid_layout=None):
+
+    def __init__(
+        self,
+        output_file=None,
+        window_size=30,
+        display=True,
+        threshold=0.001,
+        codec="mp4v",
+        grid_layout=None,
+    ):
         """
         Initialize MultiVideoFPSAnalyzer
 
@@ -366,7 +416,7 @@ class MultiVideoFPSAnalyzer:
             (255, 0, 0),  # Blue
             (0, 255, 255),  # Yellow
             (255, 0, 255),  # Magenta
-            (255, 255, 0)   # Cyan
+            (255, 255, 0),  # Cyan
         ]
 
     def add_video(self, input_file, label=None):
@@ -389,7 +439,7 @@ class MultiVideoFPSAnalyzer:
             display=False,  # We'll handle display in this class
             threshold=self.threshold,
             codec=self.codec,
-            label=label
+            label=label,
         )
 
         self.analyzers.append(analyzer)
@@ -458,7 +508,9 @@ class MultiVideoFPSAnalyzer:
             resized_frames.append(resized)
 
         # Create the composite frame
-        composite = np.zeros((target_height * rows, target_width * cols, 3), dtype=np.uint8)
+        composite = np.zeros(
+            (target_height * rows, target_width * cols, 3), dtype=np.uint8
+        )
 
         # Place each frame in the grid
         for i, frame in enumerate(resized_frames):
@@ -477,15 +529,22 @@ class MultiVideoFPSAnalyzer:
             if i < len(self.analyzers):
                 label = self.analyzers[i].label
                 color = self.colors[i % len(self.colors)]
-                cv2.putText(frame, label, (10, 30), cv2.FONT_HERSHEY_SIMPLEX,
-                           1, color, 2)
+                cv2.putText(
+                    frame, label, (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, color, 2
+                )
 
                 # Add current FPS if available
                 if self.analyzers[i].real_fps_values:
                     current_fps = self.analyzers[i].real_fps_values[-1]
-                    cv2.putText(frame, f"FPS: {current_fps:.1f}",
-                              (10, 70), cv2.FONT_HERSHEY_SIMPLEX,
-                              1, color, 2)
+                    cv2.putText(
+                        frame,
+                        f"FPS: {current_fps:.1f}",
+                        (10, 70),
+                        cv2.FONT_HERSHEY_SIMPLEX,
+                        1,
+                        color,
+                        2,
+                    )
 
             # Place the frame in the composite
             composite[y_start:y_end, x_start:x_end] = frame
@@ -505,8 +564,8 @@ class MultiVideoFPSAnalyzer:
         """
         # Create a figure with a specific size
         dpi = 100
-        fig = Figure(figsize=(width/dpi, height/dpi), dpi=dpi)
-        fig.patch.set_facecolor('none')  # Transparent background
+        fig = Figure(figsize=(width / dpi, height / dpi), dpi=dpi)
+        fig.patch.set_facecolor("none")  # Transparent background
 
         # Add a subplot
         ax = fig.add_subplot(111)
@@ -522,27 +581,37 @@ class MultiVideoFPSAnalyzer:
                 # Get color for this analyzer
                 color = self.colors[i % len(self.colors)]
                 # Convert BGR to RGB for matplotlib
-                rgb_color = (color[2]/255, color[1]/255, color[0]/255)
+                rgb_color = (color[2] / 255, color[1] / 255, color[0] / 255)
 
                 # Add moving average line for smoother graph
                 window = min(len(y), 10)
                 if window > 0:
-                    y_smooth = np.convolve(y, np.ones(window)/window, mode='valid')
-                    x_smooth = x[window-1:]
-                    ax.plot(x_smooth, y_smooth, color=rgb_color, linewidth=2,
-                           label=f"{analyzer.label} (Avg: {np.mean(y):.1f} FPS)")
+                    y_smooth = np.convolve(y, np.ones(window) / window, mode="valid")
+                    x_smooth = x[window - 1 :]
+                    ax.plot(
+                        x_smooth,
+                        y_smooth,
+                        color=rgb_color,
+                        linewidth=2,
+                        label=f"{analyzer.label} (Avg: {np.mean(y):.1f} FPS)",
+                    )
 
                 # Plot the actual data points with lower alpha
-                ax.plot(x, y, '.', color=rgb_color, alpha=0.3, markersize=3)
+                ax.plot(x, y, ".", color=rgb_color, alpha=0.3, markersize=3)
 
         # Set labels and title
-        ax.set_xlabel('Time (s)', color='white')
-        ax.set_ylabel('FPS', color='white')
-        ax.set_title('Multi-Video FPS Analysis', color='white')
+        ax.set_xlabel("Time (s)", color="white")
+        ax.set_ylabel("FPS", color="white")
+        ax.set_title("Multi-Video FPS Analysis", color="white")
 
         # Add legend
-        ax.legend(loc='lower left', facecolor='black', framealpha=0.7,
-                 edgecolor='white', labelcolor='white')
+        ax.legend(
+            loc="lower left",
+            facecolor="black",
+            framealpha=0.7,
+            edgecolor="white",
+            labelcolor="white",
+        )
 
         # Add grid and set limits
         ax.grid(True, alpha=0.3)
@@ -556,9 +625,9 @@ class MultiVideoFPSAnalyzer:
             ax.set_ylim([max(0, min(all_fps_values) - 10), max(all_fps_values) + 10])
 
         # Set tick colors
-        ax.tick_params(colors='white')
+        ax.tick_params(colors="white")
         for spine in ax.spines.values():
-            spine.set_color('white')
+            spine.set_color("white")
 
         # Render the figure to a numpy array
         canvas = FigureCanvasAgg(fig)
@@ -595,19 +664,29 @@ class MultiVideoFPSAnalyzer:
         if self.output_file:
             try:
                 fourcc = cv2.VideoWriter_fourcc(*self.codec)
-                out = cv2.VideoWriter(self.output_file, fourcc,
-                                    self.analyzers[0].recorded_fps,
-                                    (composite_width, composite_height))
+                out = cv2.VideoWriter(
+                    self.output_file,
+                    fourcc,
+                    self.analyzers[0].recorded_fps,
+                    (composite_width, composite_height),
+                )
                 if not out.isOpened():
-                    print(f"Warning: Could not create output video with codec '{self.codec}'.")
+                    print(
+                        f"Warning: Could not create output video with codec '{self.codec}'."
+                    )
                     print("Trying with default codec...")
                     # Try with default codec
-                    fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-                    out = cv2.VideoWriter(self.output_file, fourcc,
-                                        self.analyzers[0].recorded_fps,
-                                        (composite_width, composite_height))
+                    fourcc = cv2.VideoWriter_fourcc(*"mp4v")
+                    out = cv2.VideoWriter(
+                        self.output_file,
+                        fourcc,
+                        self.analyzers[0].recorded_fps,
+                        (composite_width, composite_height),
+                    )
                     if not out.isOpened():
-                        print("Failed to create output video. Analysis will proceed without saving output.")
+                        print(
+                            "Failed to create output video. Analysis will proceed without saving output."
+                        )
                         out = None
             except Exception as e:
                 print(f"Error creating output video: {e}")
@@ -655,22 +734,29 @@ class MultiVideoFPSAnalyzer:
                         try:
                             if prev_frames[i] is not None:
                                 diff = self.analyzers[i].calculate_frame_difference(
-                                    prev_frames[i], frame)
+                                    prev_frames[i], frame
+                                )
 
                                 # If the difference is above threshold, it's a new frame
                                 if diff > self.threshold:
                                     unique_frame_counts[i] += 1
                                     prev_frames[i] = frame.copy()
                         except Exception as e:
-                            print(f"Error calculating frame difference for video {i+1}: {e}")
+                            print(
+                                f"Error calculating frame difference for video {i+1}: {e}"
+                            )
                             prev_frames[i] = frame.copy()
 
                         # Every window_size frames, calculate the FPS
                         if frames_in_window[i] >= self.window_size:
                             # Calculate real FPS over the window
-                            window_time = frames_in_window[i] / self.analyzers[i].recorded_fps
+                            window_time = (
+                                frames_in_window[i] / self.analyzers[i].recorded_fps
+                            )
                             real_fps = unique_frame_counts[i] / window_time
-                            current_time = current_frames[i] / self.analyzers[i].recorded_fps
+                            current_time = (
+                                current_frames[i] / self.analyzers[i].recorded_fps
+                            )
 
                             # Add values to our data
                             self.analyzers[i].real_fps_values.append(real_fps)
@@ -694,30 +780,36 @@ class MultiVideoFPSAnalyzer:
 
                 if composite_frame is not None:
                     # Generate and overlay the FPS graph
-                    has_fps_data = any(len(analyzer.real_fps_values) > 0
-                                      for analyzer in self.analyzers)
+                    has_fps_data = any(
+                        len(analyzer.real_fps_values) > 0 for analyzer in self.analyzers
+                    )
 
                     if has_fps_data:
                         graph = self.generate_combined_fps_graph(
-                            width=composite_width // 2,
-                            height=composite_height // 4)
+                            width=composite_width // 2, height=composite_height // 4
+                        )
 
                         # Overlay graph (position it at the bottom right)
                         x = composite_width - graph.shape[1] - 20
                         y = composite_height - graph.shape[0] - 20
 
                         # Create a region of interest
-                        roi = composite_frame[y:y+graph.shape[0],
-                                            x:x+graph.shape[1]].copy()
+                        roi = composite_frame[
+                            y : y + graph.shape[0], x : x + graph.shape[1]
+                        ].copy()
 
                         # Apply alpha blending
                         alpha_channel = graph[:, :, 3] / 255.0
                         for c in range(3):
-                            roi[:, :, c] = (roi[:, :, c] * (1 - alpha_channel) +
-                                          graph[:, :, c] * alpha_channel)
+                            roi[:, :, c] = (
+                                roi[:, :, c] * (1 - alpha_channel)
+                                + graph[:, :, c] * alpha_channel
+                            )
 
                         # Put the blended image back into the frame
-                        composite_frame[y:y+graph.shape[0], x:x+graph.shape[1]] = roi
+                        composite_frame[
+                            y : y + graph.shape[0], x : x + graph.shape[1]
+                        ] = roi
 
                     # Write the frame to output video
                     if out:
@@ -726,7 +818,7 @@ class MultiVideoFPSAnalyzer:
                     # Display the frame
                     if self.display:
                         cv2.imshow(window_title, composite_frame)
-                        if cv2.waitKey(1) & 0xFF == ord('q'):
+                        if cv2.waitKey(1) & 0xFF == ord("q"):
                             break
             except Exception as e:
                 print(f"Error creating composite frame: {e}")
@@ -773,21 +865,45 @@ def main():
     print("FPSickle - Video Game FPS Analyzer")
     print("------------------------------------")
 
-    parser = argparse.ArgumentParser(description='Analyze the real framerate of videos')
-    parser.add_argument('-i', '--input', action='append', required=True,
-                       help='Input video file(s) (can be specified multiple times)')
-    parser.add_argument('-o', '--output', help='Output video file with FPS graph overlay')
-    parser.add_argument('-w', '--window', type=int, default=30,
-                        help='Analysis window size in frames')
-    parser.add_argument('--no-display', action='store_true',
-                        help="Don't display video during processing")
-    parser.add_argument('-t', '--threshold', type=float, default=0.001,
-                        help='Frame difference threshold (default: 0.001)')
-    parser.add_argument('-c', '--codec', default='mp4v',
-                        help='FourCC codec for output video (default: mp4v)')
-    parser.add_argument('-l', '--labels', action='append',
-                       help='Labels for input videos (must match number of input files)')
-    parser.add_argument('--grid', type=str, help='Grid layout as "rows,cols"')
+    parser = argparse.ArgumentParser(description="Analyze the real framerate of videos")
+    parser.add_argument(
+        "-i",
+        "--input",
+        action="append",
+        required=True,
+        help="Input video file(s) (can be specified multiple times)",
+    )
+    parser.add_argument(
+        "-o", "--output", help="Output video file with FPS graph overlay"
+    )
+    parser.add_argument(
+        "-w", "--window", type=int, default=30, help="Analysis window size in frames"
+    )
+    parser.add_argument(
+        "--no-display",
+        action="store_true",
+        help="Don't display video during processing",
+    )
+    parser.add_argument(
+        "-t",
+        "--threshold",
+        type=float,
+        default=0.001,
+        help="Frame difference threshold (default: 0.001)",
+    )
+    parser.add_argument(
+        "-c",
+        "--codec",
+        default="mp4v",
+        help="FourCC codec for output video (default: mp4v)",
+    )
+    parser.add_argument(
+        "-l",
+        "--labels",
+        action="append",
+        help="Labels for input videos (must match number of input files)",
+    )
+    parser.add_argument("--grid", type=str, help='Grid layout as "rows,cols"')
 
     args = parser.parse_args()
 
@@ -796,7 +912,7 @@ def main():
         grid_layout = None
         if args.grid:
             try:
-                rows, cols = map(int, args.grid.split(','))
+                rows, cols = map(int, args.grid.split(","))
                 grid_layout = (rows, cols)
             except:
                 print("Invalid grid layout. Using automatic layout.")
@@ -804,8 +920,10 @@ def main():
         # Check if labels are provided and match number of inputs
         labels = args.labels or []
         if labels and len(labels) != len(args.input):
-            print(f"Warning: Number of labels ({len(labels)}) doesn't match number of input files "
-                 f"({len(args.input)}). Using default labels.")
+            print(
+                f"Warning: Number of labels ({len(labels)}) doesn't match number of input files "
+                f"({len(args.input)}). Using default labels."
+            )
             labels = []
 
         # Create multi-video analyzer if more than one input
@@ -817,7 +935,7 @@ def main():
                 display=not args.no_display,
                 threshold=args.threshold,
                 codec=args.codec,
-                grid_layout=grid_layout
+                grid_layout=grid_layout,
             )
 
             # Add each video
@@ -836,7 +954,7 @@ def main():
                 display=not args.no_display,
                 threshold=args.threshold,
                 codec=args.codec,
-                label=label
+                label=label,
             )
 
             analyzer.analyze()
@@ -848,5 +966,5 @@ def main():
     return 0
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     exit(main())
