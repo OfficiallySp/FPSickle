@@ -64,7 +64,7 @@ FPSickle can be tuned using these parameters:
 - `--output` / `-o`: Path to output video file
 - `--no-display`: Don't display video during processing
 
-# Advanced Options
+### Advanced Options
 Optionally you can use the following flags to change the behavior of the tool:
 
 - `--window` / `-w`: Analysis window size in frames (default: 30)  Smaller values give more frequent updates but may be less accurate
@@ -112,3 +112,6 @@ In many game recordings, the actual framerate differs from the recording framera
 3. Duplicated frames in the recording
 
 This tool uses image processing techniques to identify unique frames and calculate the true framerate over time.
+
+## Attributions
+Contributions are welcome to the project. Please be sure to credit me if you use this tool. 
