@@ -1,5 +1,9 @@
 # FPSickle
 
+<p align="center">
+  <img src="assets/fpsickle_icon.png" alt="FPSickle Icon" width="150" height="150">
+</p>
+
 A tool for analyzing raw video game recordings from OBS and estimating their real framerate. The tool generates a framerate graph overlay on top of the video.
 
 ## Features
@@ -54,10 +58,14 @@ FPSickle can be tuned using these parameters:
 
 - `--input` / `-i`: Path to input AVI file
 - `--output` / `-o`: Path to output video file
-- `--window` / `-w`: Analysis window size in frames (default: 30)  Smaller values give more frequent updates but may be less accurate
 - `--no-display`: Don't display video during processing
+
+# Advanced Options
+Optionally you can use the following flags to change the behavior of the tool:
+
+- `--window` / `-w`: Analysis window size in frames (default: 30)  Smaller values give more frequent updates but may be less accurate
 - `--threshold` / `-t`: Frame difference threshold (default: 0.001) Lower values are more sensitive to small changes between frames
-- `--codec` / `-c`: FourCC codec for output video (default: mp4v)
+- `--codec` / `-c`: FourCC codec for output video (default: mp4v) (see codec options below)
 
 ## Troubleshooting
 
